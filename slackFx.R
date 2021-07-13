@@ -113,7 +113,7 @@ getConversations = function(token, channel, oldest = 0, latest = NULL, sleepEver
               oldest = oldest,
               latest = latest)
   
-  results <<- slackCall(conversations.history.url, body = body, sleepEveryXCalls = sleepEveryXCalls)
+  results = slackCall(conversations.history.url, body = body, sleepEveryXCalls = sleepEveryXCalls)
   
   if (returnRaw){
     results
