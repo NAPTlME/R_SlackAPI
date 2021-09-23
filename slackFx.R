@@ -73,15 +73,19 @@ getChannels = function(token, sleepEveryXCalls = 5){
 
 #### Get Users From Each Channel
 
-getUsers = function(token, sleepEveryXCalls = 5){
+getUsers = function(token, sleepEveryXCalls = 5, returnRaw = F){
   body = list(token = token)
   results = slackCall(users.list.url, body = body)
   
-  do.call(rbind, lapply(results, function(userInfoContent){
-    do.call(rbind, lapply(userInfoContent$members, function(x){
-      data.frame(id = x[["id"]], name = x[["name"]])
+  if(returnRaw){
+    results
+  } else {
+    do.call(rbind, lapply(results, function(userInfoContent){
+      do.call(rbind, lapply(userInfoContent$members, function(x){
+        data.frame(id = x[["id"]], name = x[["name"]], is_bot = x[["is_bot"]], is_app_user = x[["is_app_user"]])
+      }))
     }))
-  }))
+  }
 }
 
 
