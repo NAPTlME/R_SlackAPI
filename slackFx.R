@@ -133,8 +133,9 @@ getConversations = function(token, channel, oldest = 0, latest = NULL, sleepEver
         id = x[["user"]]
         ts = x[["ts"]]
         text = x[["text"]]
+        replyCount = ifelse(!is.null(x[["reply_count"]]), x[["reply_count"]], 0)
         if(!any(is.null(id), is.null(ts), is.null(text)))
-          data.frame(id = id, ts = ts, text = text)
+          data.frame(id = id, ts = ts, text = text, reply_count = replyCount)
       }))
     })) %>% 
       mutate(datetime = convertTsToDateTime(ts),
