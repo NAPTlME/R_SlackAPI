@@ -35,7 +35,7 @@ slackCall = function(url, body, sleepEveryXCalls = 0){
   contentList = list()
   body$cursor = NULL
   response = POST(url, body = body, encode = "form")
-  response.content = content(response)
+  response.content = httr::content(response)
   
   contentList[[length(contentList) + 1]] = response.content
   
@@ -47,7 +47,7 @@ slackCall = function(url, body, sleepEveryXCalls = 0){
     }
     body$cursor = response.content$response_metadata$next_cursor
     response = POST(url, body = body, encode = "form")
-    response.content = content(response)
+    response.content = httr::content(response)
     
     contentList[[length(contentList) + 1]] = response.content
   }
@@ -61,7 +61,7 @@ getChannels = function(token, sleepEveryXCalls = 5){
   
   results = slackCall(conversations.list.url, body, sleepEveryXCalls)
   response = POST(conversations.list.url, body = list(token = token), encode = "form")
-  response.content = content(response)
+  response.content = httr::content(response)
   
   do.call(rbind, lapply(results, function(response.content) {
     do.call(rbind, lapply(response.content$channels, function(x){
