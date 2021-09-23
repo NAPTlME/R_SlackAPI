@@ -8,9 +8,15 @@ library(jsonlite)
 library(lubridate)
 
 #### Urls ####
+# https://api.slack.com/methods
+
+# https://api.slack.com/methods/conversations.list
 conversations.list.url = "https://slack.com/api/conversations.list" #lists all channels
+# https://api.slack.com/methods/conversations.history
 conversations.history.url = "https://slack.com/api/conversations.history" #lists conversations in channel
+# https://api.slack.com/methods/users.list
 users.list.url = "https://slack.com/api/users.list" # get users
+# https://api.slack.com/methods/conversations.replies
 conversations.replies.url = "https://slack.com/api/conversations.replies"
 
 #### Functions ####
