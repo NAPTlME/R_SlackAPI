@@ -42,7 +42,10 @@ slackCall = function(url, body, sleepEveryXCalls = 0){
   i = 1
   while(!is.null(response.content$response_metadata$next_cursor) && response.content$response_metadata$next_cursor != ""){
     i <<- i + 1
-    if (sleepEveryXCalls != 0 && i %% sleepEveryXCalls == 0){
+    #numCalls <<- numCalls + 1
+    if (sleepEveryXCalls != 0 && (i %% sleepEveryXCalls == 0 #| numCalls %% sleepEveryXCalls == 0
+                                  )){
+      print(paste0("numCalls: ", numCalls))
       Sys.sleep(60) # sleep for one minute before continuing to avoid rate limits
     }
     body$cursor = response.content$response_metadata$next_cursor
@@ -56,12 +59,14 @@ slackCall = function(url, body, sleepEveryXCalls = 0){
 
 #### Get Channels ####
 
-getChannels = function(token, sleepEveryXCalls = 5){
+getChannels = function(token, sleepEveryXCalls = 5, returnRaw = F){
   body = list(token = token)
   
   results = slackCall(conversations.list.url, body, sleepEveryXCalls)
-  response = POST(conversations.list.url, body = list(token = token), encode = "form")
-  response.content = httr::content(response)
+  
+  if(returnRaw) {
+    return(results)
+  }
   
   do.call(rbind, lapply(results, function(response.content) {
     do.call(rbind, lapply(response.content$channels, function(x){
@@ -127,7 +132,7 @@ getConversations = function(token, channel, oldest = 0, latest = NULL, sleepEver
   
   if (returnRaw){
     results
-  } else {
+  } else if (sum(sapply(results, function(x) length(x[["messages"]]))) > 0) {
     do.call(rbind, lapply(results, function(response.content){
       do.call(rbind, lapply(response.content$messages, function(x){
         id = x[["user"]]
